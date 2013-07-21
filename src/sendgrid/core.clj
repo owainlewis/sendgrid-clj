@@ -70,6 +70,11 @@
 (defn normalize-auth [& [user pass]]
   {:api_user user :api_key pass})
 
+(defmacro with-error-handling [& body]
+  `(try ~@body
+   (catch Exception e#
+     (prn (.message e#)))))
+
 (defn <>
   "Performs a HTTP request to SendGrid API"
   ([url]
@@ -77,9 +82,8 @@
   ([url auth]
     (client/request (build-request url auth)))
   ([url auth params]
-    (try
-      (client/request (build-request url auth params))
-    (catch Exception e (prn (.message e))))))
+    (with-error-handling
+      (client/request (build-request url auth params)))))
 
 (defn >>
   "Same as <> but only returns the body of the response"

@@ -1,5 +1,6 @@
 (ns sendgrid.core
-  (:require [clj-http.client :as client]))
+  (:require [sendgrid.endpoints :as endpoints]
+            [clj-http.client :as client]))
 
 ;; SendGrid offers a Web API that allows customers to retrieve information about
 ;; their account such as statistics, bounces, spam reports, unsubscribes, and other information.
@@ -41,6 +42,13 @@
                       (apply str))]
     (str sendgrid resource)))
 
+(defn raw-url
+  "Constructs a full Sendgrid url from a partial endpoint"
+  [endpoint]
+  (if (clojure.string/blank? endpoint)
+    (throw (Exception. "Endpoint blank"))
+    (str sendgrid "/" endpoint ".json")))
+
 (defn build-request
   [url & [auth params]]
   (let [auth-params (or auth @creds)
@@ -58,9 +66,16 @@
   ([url]
     (client/request (build-request url)))
   ([url auth]
-    (client/request (build-request url auth))))
+    (client/request (build-request url auth)))
+  ([url auth params]
+    (try
+      (client/request (build-request url auth params))
+    (catch Exception e (prn (.message e))))))
 
-(defn >> [& args] (->> (apply <> args) :body))
+(defn >>
+  "Same as <> but only returns the body of the response"
+  [& args]
+  (->> (apply <> args) :body))
 
 ;; **********************************
 
@@ -68,7 +83,24 @@
   "Get a SendGrid account profile"
   ([] (profile @creds))
   ([auth]
-    (let [u (url "profile" :get)]
-      (into {}
-        (>> u auth)))))
+    (into {}
+      (>> (raw-url (:profile endpoints/urls)) auth))))
+
+;; Mail
+;; **********************************
+
+(def m {
+  :to "owain@owainlewis.com"
+  :from "jack@twitter.com"
+  :subject "Mail"
+  :text "<h1>Hello world</h1>"})
+
+(defn assert-keys! [m keys]
+  (if-let [check-result (map (partial contains? m) keys)]
+    (when ((complement every?) true? check-result)
+      (throw (Exception. "Required keys are missing")))))
+
+(defn send [auth message]
+  (assert-keys! message [:to :from :subject])
+  (>> (raw-url (:send endpoints/urls)) auth message))
 

@@ -46,8 +46,12 @@
   (let [auth-params (or auth @creds)
         query-params (merge auth-params params)]
     { :method :get
+      :as :json
       :query-params query-params
       :url url } ))
+
+(defn normalize-auth [& [user pass]]
+  {:api_user user :api_key pass})
 
 (defn <>
   "Performs a HTTP request to SendGrid API"
@@ -56,9 +60,7 @@
   ([url auth]
     (client/request (build-request url auth))))
 
-(defn >> [& args]
-  (->> (apply <> args)
-       :body))
+(defn >> [& args] (->> (apply <> args) :body))
 
 ;; **********************************
 
@@ -66,6 +68,7 @@
   "Get a SendGrid account profile"
   ([] (profile @creds))
   ([auth]
-  (let [u (url "profile" :get)]
-    (<> u auth))))
+    (let [u (url "profile" :get)]
+      (into {}
+        (>> u auth)))))
 

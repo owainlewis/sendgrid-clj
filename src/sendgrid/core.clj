@@ -1,11 +1,20 @@
 (ns sendgrid.core
-  (:require [sendgrid.endpoints :as endpoints]
-            [clj-http.client :as client]))
+  (:require [clj-http.client :as client]))
 
 ;; SendGrid offers a Web API that allows customers to retrieve information about
 ;; their account such as statistics, bounces, spam reports, unsubscribes, and other information.
 ;; This API is not RESTful since for most calls both GET and POST HTTP verbs can be used
 ;; interchangeably, and other verbs are not supported.
+
+;; API endpoints
+;; **********************************
+
+(def +endpoints+
+  {:profile "profile.get"
+   :stats "stats.get"
+   :unsubscribes "unsubscribes.get"
+   :advanced-stats "stats.getAdvanced"
+   :send  "mail.send"})
 
 ;; Authentication
 ;; **********************************
@@ -84,23 +93,24 @@
   ([] (profile @creds))
   ([auth]
     (into {}
-      (>> (raw-url (:profile endpoints/urls)) auth))))
+      (>> (raw-url (:profile +endpoints+)) auth))))
 
 ;; Mail
 ;; **********************************
-
-(def m {
-  :to "owain@owainlewis.com"
-  :from "jack@twitter.com"
-  :subject "Mail"
-  :text "<h1>Hello world</h1>"})
 
 (defn assert-keys! [m keys]
   (if-let [check-result (map (partial contains? m) keys)]
     (when ((complement every?) true? check-result)
       (throw (Exception. "Required keys are missing")))))
 
-(defn send [auth message]
+(defn send-email [auth message]
   (assert-keys! message [:to :from :subject])
-  (>> (raw-url (:send endpoints/urls)) auth message))
+  (>> (raw-url (:send +endpoints+)) auth message))
+
+(comment
+  (send-email auth {
+    :to "owain@owainlewis.com"
+    :from "jack@twitter.com"
+    :subject "Mail"
+    :text "<h1>Hello world</h1>"}))
 

@@ -12,6 +12,8 @@
 (def +endpoints+
   {:profile "profile.get"
    :stats "stats.get"
+   :bounces "bounces.get"
+   :spam "spamreports.get"
    :unsubscribes "unsubscribes.get"
    :advanced-stats "stats.getAdvanced"
    :send  "mail.send"})
@@ -51,12 +53,12 @@
                       (apply str))]
     (str sendgrid resource)))
 
-(defn raw-url
+(defn build-url
   "Constructs a full Sendgrid url from a partial endpoint"
   [endpoint]
   (if (clojure.string/blank? endpoint)
     (throw (Exception. "Endpoint blank"))
-    (str sendgrid "/" endpoint ".json")))
+      (str sendgrid "/" endpoint ".json")))
 
 (defn build-request
   [url & [auth params]]
@@ -72,8 +74,8 @@
 
 (defmacro with-error-handling [& body]
   `(try ~@body
-   (catch Exception e#
-     (prn (.message e#)))))
+     (catch Exception e#
+       (prn (.message e#)))))
 
 (defn <>
   "Performs a HTTP request to SendGrid API"
@@ -90,6 +92,10 @@
   [& args]
   (->> (apply <> args) :body))
 
+(defmacro with-results
+  [& body]
+  `(into {} (do ~@body)))
+
 ;; **********************************
 
 (defn profile
@@ -97,7 +103,7 @@
   ([] (profile @creds))
   ([auth]
     (into {}
-      (>> (raw-url (:profile +endpoints+)) auth))))
+      (>> (build-url (:profile +endpoints+)) auth))))
 
 ;; Mail
 ;; **********************************
@@ -107,9 +113,12 @@
     (when ((complement every?) true? check-result)
       (throw (Exception. "Required keys are missing")))))
 
-(defn send-email [auth message]
-  (assert-keys! message [:to :from :subject])
-  (>> (raw-url (:send +endpoints+)) auth message))
+(defn send-email
+  ([message]
+    (send-email @creds message))
+  ([auth message]
+    (assert-keys! message [:to :from :subject])
+      (>> (build-url (:send +endpoints+)) auth message)))
 
 (comment
   (send-email auth {
@@ -117,4 +126,34 @@
     :from "jack@twitter.com"
     :subject "Mail"
     :text "<h1>Hello world</h1>"}))
+
+;; Stats
+
+(defn stats
+  "Fetch general account stats
+   If no date range is specified it returns stats
+   for the current day
+   - days
+   - start_date
+   - end_date
+   - aggregate"
+  ([auth] (stats auth {}))
+  ([auth params-hash]
+     (let [url (build-url (:stats +endpoints+))]
+       (into {}
+         (>> url auth params-hash)))))
+
+;; TODO needs ability to pass in the params
+
+(defn bounces
+  ([auth] (bounces auth {}))
+  ([auth params]
+    (>> (build-url
+          (:bounces +endpoints+)) auth params)))
+
+(defn spam-reports
+  ([auth] (spam-reports auth {}))
+  ([auth params]
+    (>> (build-url
+          (:spam +endpoints+)) auth params)))
 

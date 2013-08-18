@@ -34,6 +34,17 @@ To send an email message via SendGrid. Note that certain keys are required
 ;; {:message "success"}
 ```
 
+## Stats
+
+```clojure
+(stats auth)
+
+;; With extra params
+
+(stats auth {:start_date "" :end_date ""})
+
+```
+
 ## License
 
 Copyright © 2013 FIXME

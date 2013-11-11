@@ -2,6 +2,14 @@
 
 A Clojure library for SendGrid
 
+## Installation
+
+Add the following to your dependencies to install sendgrid from [Clojars](https://clojars.org/sendgrid).
+
+```clojure
+[sendgrid "0.1.0"]
+```
+
 ## Use
 
 All functions require authorization which is just a map with the following keys

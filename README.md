@@ -45,6 +45,22 @@ To send an email message via SendGrid. Note that certain keys are required
 
 ```
 
+## Testing
+
+Export SENDGRID_PASSWORD and SENDGRID_USERNAME in your shell, then run the tests.
+```shell
+> export SENDGRID_USERNAME=app123XYZ@heroku.com
+> export SENDGRID_PASSWORD=xxyyzz2244
+> export SENDGRID_TO_ADDR=you@wherever.com
+> lein test
+<... testing output ...>
+
+```
+
+
+
+
+
 ## License
 
 Copyright © 2013 FIXME

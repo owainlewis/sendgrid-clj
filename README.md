@@ -17,6 +17,9 @@ Add the following to your dependencies to install sendgrid from [Clojars](https:
 All functions require authorization which is just a map with the following keys
 
 ```clojure
+(in-ns 'your-ns
+  (:require [sendgrid-clj.core]))
+
 (def auth {:api_user "blah" :api_key "blah"})
 ```
 

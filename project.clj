@@ -1,4 +1,4 @@
-(defproject sendgrid-clj "1.0"
+(defproject io.forward/sendgrid-clj "1.0"
   :description "sendgrid wrapper"
   :url "http://owainlewis.com"
   :license {:name "Eclipse Public License"

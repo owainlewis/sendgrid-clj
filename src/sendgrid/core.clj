@@ -1,4 +1,4 @@
-(ns sendgrid.core
+(ns sendgrid-clj.core
   (:require [clj-http.client :as client]))
 
 ;; SendGrid offers a Web API that allows customers to retrieve information about
@@ -164,4 +164,3 @@
   ([auth params]
     (>> (build-url
           (:spam +endpoints+)) auth params)))
-

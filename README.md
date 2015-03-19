@@ -2,6 +2,8 @@
 
 A Clojure library for SendGrid
 
+[![Clojars Project](http://clojars.org/sendgrid-clj/latest-version.svg)](http://clojars.org/sendgrid-clj)
+
 ## Installation
 
 Add the following to your dependencies to install sendgrid from [Clojars](https://clojars.org/sendgrid).

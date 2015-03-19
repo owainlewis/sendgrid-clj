@@ -41,6 +41,21 @@ To send an email message via SendGrid. Note that certain keys are required
 
 ;; {:message "success"}
 ```
+## Sending an attachment
+
+If you'd like to send an attachment with your email, pass an attachment map as a param:
+
+```clojure
+(send-email auth {
+  :to "owain@owainlewis.com"
+  :from "jack@twitter.com"
+  :subject "Mail"
+  :text "<h1>Hello world</h1>"
+  :attachment {:title "huzzah!"
+               :content-type "text/csv"
+               :file (io/file "huzzah.csv")}})
+```
+
 
 ## Stats
 

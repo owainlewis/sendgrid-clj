@@ -63,11 +63,19 @@
 (defn build-request
   [url & [auth params]]
   (let [auth-params (or auth @creds)
-        query-params (merge auth-params params)]
-    { :method :get
-      :as :json
-      :query-params query-params
-      :url url } ))
+        query-params (merge auth-params params)
+        attachment (:attachment params)
+        base {:method :get
+              :as :json
+              :query-params query-params
+              :url url}]
+    (if attachment
+      (assoc base
+        :method :post
+        :multipart [{:name "title" :content (:title attachment)}
+                    {:name "Content/type" :content (:content-type attachment)}
+                    {:name (str "files[" (.getName (:file attachment)) "]") :content (:file attachment)}])
+      base)))
 
 (defn normalize-auth [& [user pass]]
   {:api_user user :api_key pass})

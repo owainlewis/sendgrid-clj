@@ -9,7 +9,7 @@ A Clojure library for SendGrid
 Add the following to your dependencies to install sendgrid from [Clojars](https://clojars.org/sendgrid).
 
 ```clojure
-[sendgrid "0.1.0"]
+[sendgrid-clj "1.0"]
 ```
 
 ## Use

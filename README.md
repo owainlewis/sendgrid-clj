@@ -2,14 +2,14 @@
 
 A Clojure library for SendGrid
 
-[![Clojars Project](http://clojars.org/sendgrid-clj/latest-version.svg)](http://clojars.org/sendgrid-clj)
+[![Clojars Project](http://clojars.org/io.forward/sendgrid-clj/latest-version.svg)](http://clojars.org/io.forward/sendgrid-clj)
 
 ## Installation
 
 Add the following to your dependencies to install sendgrid from [Clojars](https://clojars.org/sendgrid).
 
 ```clojure
-[sendgrid-clj "1.0"]
+[io.forward/sendgrid-clj "1.0"]
 ```
 
 ## Use
@@ -82,12 +82,6 @@ Export SENDGRID_PASSWORD and SENDGRID_USERNAME in your shell, then run the tests
 
 ```
 
-
-
-
-
 ## License
-
-Copyright © 2013 FIXME
 
 Distributed under the Eclipse Public License, the same as Clojure.

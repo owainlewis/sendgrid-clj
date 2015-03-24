@@ -1,4 +1,4 @@
-(ns sendgrid.core-test
+(ns sendgrid-clj.core-test
   (:use clojure.test
         sendgrid-clj.core))
 

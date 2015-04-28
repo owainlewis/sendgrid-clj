@@ -83,7 +83,7 @@
 (defmacro with-error-handling [& body]
   `(try ~@body
      (catch Exception e#
-       (prn (.message e#)))))
+       (prn (.getMessage e#)))))
 
 (defn <>
   "Performs a HTTP request to SendGrid API"

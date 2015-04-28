@@ -37,6 +37,15 @@
                                   :subject "Mail"
                                   :text "<h1>Hello world</h1>"}))))))
 
+(deftest test-url-to-long-error
+  (testing "big send"
+    (is (= "success"
+           (:message (send-email (get-auth)
+                                 {:to (get-sg-to)
+                                  :from "test@test.com"
+                                  :subject "Mail"
+                                  :html (clojure.string/join (repeat 100000 "b"))}))))))
+
 (deftest test-stats
   (testing "stats"
     (let [output (stats (get-auth))]

@@ -42,7 +42,8 @@ To send an email message via SendGrid. Note that certain keys are required
   :to "owain@owainlewis.com"
   :from "jack@twitter.com"
   :subject "Mail"
-  :text "<h1>Hello world</h1>"})
+  :html "<h1>Hello world</h1?"
+  :text "Hello world"})
 
 ;; {:message "success"}
 ```

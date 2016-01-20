@@ -6,9 +6,6 @@
 ;; This API is not RESTful since for most calls both GET and POST HTTP verbs can be used
 ;; interchangeably, and other verbs are not supported.
 
-;; API endpoints
-;; **********************************
-
 (def +endpoints+
   {:profile "profile.get"
    :stats "stats.get"
@@ -18,21 +15,13 @@
    :advanced-stats "stats.getAdvanced"
    :send  "mail.send"})
 
-;; Authentication
-;; **********************************
-
 (def creds (ref {}))
 
 (defn auth! [user pass]
   (dosync
     (ref-set creds {:api_user user :api_pass pass})))
 
-;; **********************************
-
 (def sendgrid "https://sendgrid.com/api")
-
-;; Requests
-;; **********************************
 
 (defn normalize-endpoint
   "Normalize an endpoint so that it always starts with a trailing slash"
@@ -104,17 +93,12 @@
   [& body]
   `(into {} (do ~@body)))
 
-;; **********************************
-
 (defn profile
   "Get a SendGrid account profile"
   ([] (profile @creds))
   ([auth]
     (into {}
       (>> (build-url (:profile +endpoints+)) auth))))
-
-;; Mail
-;; **********************************
 
 (defn assert-keys! [m keys]
   (if-let [check-result (map (partial contains? m) keys)]
@@ -135,8 +119,6 @@
     :subject "Mail"
     :text "<h1>Hello world</h1>"}))
 
-;; Stats
-
 (defn stats
   "Fetch general account stats
    If no date range is specified it returns stats
@@ -150,8 +132,6 @@
      (let [url (build-url (:stats +endpoints+))]
        (into {}
          (>> url auth params-hash)))))
-
-;; TODO needs ability to pass in the params
 
 (defn bounces
   ([auth] (bounces auth {}))
